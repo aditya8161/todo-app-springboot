@@ -1,0 +1,21 @@
+#datasource configuration
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/todoapp
+    username: root
+    password: pass123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+#jpa Configuration
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  #api versioning
+#  mvc:
+#    servlet:
+#      path: /api/v1
+
+
+

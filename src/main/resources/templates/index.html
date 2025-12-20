@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Page</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(to right, #5a6fd8, #6b4090);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-secondary {
+            background: linear-gradient(to right, #36d1dc, #5b86e5);
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background: linear-gradient(to right, #2cc4cf, #4a74d4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(54, 209, 220, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+  <!-- navbar from fragments start  -->
+  <div th:replace="fragments/navbar :: header"></div>
+    <!-- navbar from fragments end  -->
+
+      <!-- --------------Hero Section  start --------------- -->
+    <section class="gradient-bg text-white py-16 md:py-24">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">Organize Your Life with TodoMaster</h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90">The simplest, most powerful todo app to manage your tasks, boost productivity, and achieve your goals. Never forget an important task again.</p>
+            
+            <!-- Get Started / Create Todo Button -->
+            <div th:if="${session.user != null}">
+                <a th:href="@{/dashboard}" class="inline-block px-8 py-4 rounded-lg btn-secondary text-white font-bold text-lg shadow-lg">
+                    <i class="fas fa-plus-circle mr-2"></i>Create New Todo
+                </a>
+                <p class="mt-4">Welcome back! Start adding your tasks.</p>
+            </div>
+            
+            <div th:unless="${session.user != null}">
+                <a href="#" class="inline-block px-8 py-4 rounded-lg btn-primary text-white font-bold text-lg shadow-lg">
+                    Get Started - It's Free
+                </a>
+                <p class="mt-4">Join thousands of users who are already organizing their lives with TodoMaster.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-12">Why Choose TodoMaster?</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <div class="w-14 h-14 rounded-lg gradient-bg flex items-center justify-center mb-4">
+                        <i class="fas fa-tasks text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Smart Task Management</h3>
+                    <p class="text-gray-600">Organize tasks with categories, priorities, and due dates. Stay on top of everything you need to accomplish.</p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <div class="w-14 h-14 rounded-lg bg-blue-500 flex items-center justify-center mb-4">
+                        <i class="fas fa-bell text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Smart Reminders</h3>
+                    <p class="text-gray-600">Get timely notifications for upcoming tasks. Never miss a deadline with our intelligent reminder system.</p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <div class="w-14 h-14 rounded-lg bg-green-500 flex items-center justify-center mb-4">
+                        <i class="fas fa-chart-line text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Progress Tracking</h3>
+                    <p class="text-gray-600">Visualize your productivity with charts and insights. Track your completion rate and performance over time.</p>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <div class="w-14 h-14 rounded-lg bg-red-500 flex items-center justify-center mb-4">
+                        <i class="fas fa-mobile-alt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Cross-Platform Sync</h3>
+                    <p class="text-gray-600">Access your todos from any device. Seamlessly sync between web, mobile, and desktop applications.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Additional CTA Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6">Ready to Boost Your Productivity?</h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto mb-10">Join thousands of users who have transformed how they manage tasks and achieve goals with TodoMaster.</p>
+            
+            <div th:if="${session.user != null}">
+                <a th:href="@{/dashboard}" class="inline-block px-8 py-4 rounded-lg btn-primary text-white font-bold text-lg shadow-lg">
+                    <i class="fas fa-rocket mr-2"></i>Go to Dashboard
+                </a>
+            </div>
+            
+            <div th:unless="${session.user != null}">
+                <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-6">
+                    <a th:href="@{/regpage}" class="px-8 py-4 rounded-lg btn-primary text-white font-bold text-lg shadow-lg">
+                        Sign Up for Free
+                    </a>
+                    <a href="#" class="px-8 py-4 rounded-lg border-2 border-purple-600 text-purple-600 font-bold text-lg hover:bg-purple-50 transition duration-300">
+                        Learn More
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center">
+                        <i class="fas fa-tasks text-purple-400 text-2xl mr-2"></i>
+                        <span class="font-bold text-2xl">Todo<span class="text-purple-400">Master</span></span>
+                    </div>
+                    <p class="text-gray-400 mt-2">Your personal productivity companion</p>
+                </div>
+                
+                <div class="flex space-x-6 mb-6 md:mb-0">
+                    <a href="#" class="text-gray-300 hover:text-white">
+                        <i class="fab fa-facebook-f text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-300 hover:text-white">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-300 hover:text-white">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-300 hover:text-white">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                </div>
+                
+                <div class="text-gray-400 text-center md:text-right">
+                    <p>&copy; <span id="current-year">2023</span> TodoMaster. All rights reserved.</p>
+                    <p class="mt-1">Made with <i class="fas fa-heart text-red-400"></i> for productivity enthusiasts</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for mobile menu and current year -->
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Set current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        
+        // Thymeleaf simulation for demo (remove in production)
+        // This simulates a logged-in user. Change to false to see guest view.
+        const isLoggedIn = false; // Change to true to see logged-in user view
+        
+        // For demo purposes, we'll simulate Thymeleaf behavior
+        // In a real Thymeleaf application, you would use th:if and th:unless
+        document.addEventListener('DOMContentLoaded', function() {
+            // This is just for the demo to simulate Thymeleaf behavior
+            // In a real app, Thymeleaf will handle the conditional rendering
+            console.log("In a real application, Thymeleaf will handle the conditional rendering based on session.user");
+        });
+    </script>
+
+</body>
+</html>

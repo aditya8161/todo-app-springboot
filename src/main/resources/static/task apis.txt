@@ -1,0 +1,23 @@
+task apis
+tasks_base_url = "http://localhost:8080/tasks";
+
+1)CREATE task : 
+    POST API : http://localhost:8080/tasks/{userId}
+    required : userId (Pathvarible) and @RequestBody TaskDto
+
+2)GET ALL task by userId: 
+    GET API :  http://localhost:8080/tasks
+    required : @RequestParam Long userId
+
+3)COMPLETE task by taskId : 
+    PATCH API : http://localhost:8080/tasks/complete 
+    required : @RequestParam String taskId
+
+4)DELETE task by taskId: 
+    DELETE API : http://localhost:8080/tasks/{taskId} 
+    required : @PathVariable String taskId
+
+5)UPDATE task by taskId
+    PATCH API : http://localhost:8080/tasks/{taskId}
+    required : @PathVariable String taskId, @RequestBody TaskDto
+

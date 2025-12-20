@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register User</title>
+    <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Custom CSS -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .card-hover {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    .btn-primary {
+      background: linear-gradient(to right, #667eea, #764ba2);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(to right, #5a6fd8, #6b4090);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    .btn-secondary {
+      background: linear-gradient(to right, #36d1dc, #5b86e5);
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+      background: linear-gradient(to right, #2cc4cf, #4a74d4);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(54, 209, 220, 0.4);
+    }
+    .input-focus:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <!-- navbar from fragments start  -->
+    <div th:replace="fragments/navbar :: header"></div>
+
+<!-- -----------register code start--------------- -->
+<main class="py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md mx-auto">
+        <!-- Header Card -->
+        <div class="mb-8 text-center card-hover">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full gradient-bg mb-4">
+                <i class="fas fa-user-plus text-white text-2xl"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
+            <p class="text-gray-600">Join our community by creating your account</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 card-hover">
+            <form id="addUserForm" method="POST" class="space-y-6">
+                <!-- Name Field -->
+                <div class="form-group">
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-user mr-2 text-purple-600"></i>Full Name
+                    </label>
+                    <input type="text" id="name" name="name" placeholder="John Doe" required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 input-focus placeholder-gray-400">
+                </div>
+
+                <!-- Email Field -->
+                <div class="form-group">
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-envelope mr-2 text-purple-600"></i>Email Address
+                    </label>
+                    <input type="email" id="email" name="email" placeholder="john@example.com" required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 input-focus placeholder-gray-400">
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-lock mr-2 text-purple-600"></i>Password
+                    </label>
+                    <input type="password" id="password" name="password" required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 input-focus placeholder-gray-400">
+                </div>
+
+                <!-- Phone Field -->
+                <div class="form-group">
+                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-phone mr-2 text-purple-600"></i>Phone Number
+                    </label>
+                    <input type="tel" id="phone" name="phone" placeholder="123-456-7890"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 input-focus placeholder-gray-400">
+                    <p class="mt-2 text-sm text-gray-500">Optional - for account recovery</p>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" 
+                    class="w-full py-3 px-4 btn-primary text-white font-semibold rounded-lg shadow-md hover:shadow-lg transform transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                    <i class="fas fa-user-plus mr-2"></i>Create Account
+                </button>
+
+                <!-- Divider -->
+                <div class="relative my-6">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-gray-500">Already have an account?</span>
+                    </div>
+                </div>
+
+                <!-- Secondary Action -->
+                <div class="text-center">
+                    <a th:href="@{/loginpage}" class="inline-flex items-center text-sm font-medium text-purple-600 hover:text-purple-500 transition-colors duration-200">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Sign in to existing account
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Features Section -->
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 text-center">
+                <i class="fas fa-shield-alt text-purple-600 text-xl mb-2"></i>
+                <h3 class="font-medium text-gray-900">Secure</h3>
+                <p class="text-sm text-gray-500">Bank-level security</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 text-center">
+                <i class="fas fa-bolt text-purple-600 text-xl mb-2"></i>
+                <h3 class="font-medium text-gray-900">Fast</h3>
+                <p class="text-sm text-gray-500">Quick registration</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 text-center">
+                <i class="fas fa-headset text-purple-600 text-xl mb-2"></i>
+                <h3 class="font-medium text-gray-900">Support</h3>
+                <p class="text-sm text-gray-500">24/7 assistance</p>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- -----------register code end------------------ -->
+
+    <script th:src="@{/js/user-service.js}"></script>
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Set current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        
+        // Thymeleaf simulation for demo (remove in production)
+        // This simulates a logged-in user. Change to false to see guest view.
+        const isLoggedIn = false; // Change to true to see logged-in user view
+        
+        // For demo purposes, we'll simulate Thymeleaf behavior
+        // In a real Thymeleaf application, you would use th:if and th:unless
+        document.addEventListener('DOMContentLoaded', function() {
+            // This is just for the demo to simulate Thymeleaf behavior
+            // In a real app, Thymeleaf will handle the conditional rendering
+            console.log("In a real application, Thymeleaf will handle the conditional rendering based on session.user");
+            
+            // Add form validation feedback
+            const form = document.getElementById('addUserForm');
+            const inputs = form.querySelectorAll('input[required]');
+            
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (this.value.trim() === '') {
+                        this.classList.add('border-red-300');
+                        this.classList.remove('border-gray-300');
+                    } else {
+                        this.classList.remove('border-red-300');
+                        this.classList.add('border-gray-300');
+                    }
+                });
+                
+                input.addEventListener('input', function() {
+                    if (this.value.trim() !== '') {
+                        this.classList.remove('border-red-300');
+                        this.classList.add('border-gray-300');
+                    }
+                });
+            });
+        });
+    </script> 
+</body>
+</html>
