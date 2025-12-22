@@ -34,7 +34,7 @@ public interface TaskService
     TaskDto completeTaskById(String taskId);
 
     //delete task
-    void deleteTaskById(String taskId);
+    boolean deleteTaskById(String taskId);
 
     //edit task by id
     TaskDto updateTaskById(String taskId, TaskDto taskDto);

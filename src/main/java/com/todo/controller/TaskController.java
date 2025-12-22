@@ -48,7 +48,10 @@ public class TaskController
     @GetMapping
     public ResponseEntity<List<TaskDto>> getTasksByUserId(@RequestParam Long userId){
         List<TaskDto> tasksList = taskService.getTaskByuserId(userId);
-
+        System.out.println(tasksList);
+        if(tasksList == null){
+            return new ResponseEntity<>(tasksList,HttpStatus.NO_CONTENT);
+        }
         return new ResponseEntity<>(tasksList,HttpStatus.OK);
     }
 
@@ -118,8 +121,13 @@ public class TaskController
     //delete task by taskId
     @DeleteMapping("/{taskId}")
     public ResponseEntity<?> deleteTaskById(@PathVariable String taskId){
-        taskService.deleteTaskById(taskId);
-        return ResponseEntity.noContent().build();
+        boolean status = taskService.deleteTaskById(taskId);
+
+        if(status){
+            System.out.println("task is deleted");
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     //get all task

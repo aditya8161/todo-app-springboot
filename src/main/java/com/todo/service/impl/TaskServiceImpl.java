@@ -162,12 +162,17 @@ public class TaskServiceImpl implements TaskService
     //delete task by id
 
 
-    @Override
-    public void deleteTaskById(String taskId) {
+    @Transactional
+    public boolean deleteTaskById(String taskId) {
         Task task = taskRepo.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task Not Found : "+taskId));
 
         if(task != null){
+            User user = task.getUser();
+
+            user.getTasks().remove(task);
             taskRepo.delete(task);
+            return true;
         }
+        return false;
     }
 }

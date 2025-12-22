@@ -54,15 +54,23 @@ public class PageController
 
     //----------open profile page --------------
     @GetMapping("/profile")
-    public String openProfilePage(){
+    public String openProfilePage(HttpSession session){
         System.out.println("Open profile page...!");
-        return "profile";
+
+        Object user = session.getAttribute("user");
+
+        if(user != null){
+            return "profile";
+        }
+
+        return "redirect:/loginpage";
     }
 
     //---------open dashboard page ----------------
     @GetMapping("/dashboard")
-    public String openDashboardPage(){
+    public String openDashboardPage(HttpSession session){
         System.out.println("Open dashboard page...!");
+
         return "dashboard";
     }
 

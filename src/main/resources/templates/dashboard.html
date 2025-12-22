@@ -1,479 +1,284 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - Task Manager</title>
-
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <!-- Custom CSS -->
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
-    * {
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .gradient-bg {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-
-    .card-hover {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .card-hover:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    }
-
-    .btn-primary {
-        background: linear-gradient(to right, #667eea, #764ba2);
-        transition: all 0.3s ease;
-    }
-
-    .btn-primary:hover {
-        background: linear-gradient(to right, #5a6fd8, #6b4090);
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-    }
-
-    .input-focus:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    .tab-active {
-        border-bottom: 3px solid #667eea;
-        color: #667eea;
-    }
-
-    /* Status badge styles */
-    .status-badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 9999px;
-        font-size: 0.75rem;
-        font-weight: 500;
-        display: inline-block;
-    }
-
-    .status-pending {
-        background-color: #fef3c7;
-        color: #d97706;
-    }
-
-    .status-in_progress {
-        background-color: #dbeafe;
-        color: #1d4ed8;
-    }
-
-    .status-completed {
-        background-color: #d1fae5;
-        color: #047857;
-    }
-
-    /* Type badge styles */
-    .type-badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 9999px;
-        font-size: 0.75rem;
-        font-weight: 500;
-        display: inline-block;
-    }
-
-    .type-personal {
-        background-color: #e0e7ff;
-        color: #3730a3;
-    }
-
-    .type-work {
-        background-color: #fce7f3;
-        color: #9d174d;
-    }
-
-    .type-shopping {
-        background-color: #dcfce7;
-        color: #166534;
-    }
-
-    .type-other {
-        background-color: #fef3c7;
-        color: #92400e;
-    }
-
-    /* Modal styles */
-    .modal-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .modal-content {
-        background: white;
-        border-radius: 0.5rem;
-        max-width: 500px;
-        width: 90%;
-        max-height: 90vh;
-        overflow-y: auto;
-    }
-
-    /* Toast notification */
-    .toast {
-        position: fixed;
-        top: 1rem;
-        right: 1rem;
-        padding: 1rem 1.5rem;
-        border-radius: 0.5rem;
-        color: white;
-        font-weight: 500;
-        z-index: 1000;
-        transform: translateX(120%);
-        transition: transform 0.3s ease;
-    }
-
-    .toast.show {
-        transform: translateX(0);
-    }
-
-    .toast-success {
-        background-color: #10b981;
-    }
-
-    .toast-error {
-        background-color: #ef4444;
-    }
-
-    .toast-warning {
-        background-color: #f59e0b;
-    }
-
-    /* Loading spinner */
-    .loading-spinner {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(255, 255, 255, 0.8);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-    }
-
-    .spinner {
-        width: 50px;
-        height: 50px;
-        border: 5px solid #f3f3f3;
-        border-top: 5px solid #667eea;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-
-    /* Task card border based on status */
-    .border-status-pending {
-        border-left-color: #f59e0b;
-    }
-
-    .border-status-in_progress {
-        border-left-color: #3b82f6;
-    }
-
-    .border-status-completed {
-        border-left-color: #10b981;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Dashboard</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(to right, #5a6fd8, #6b4090);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-secondary {
+            background: linear-gradient(to right, #36d1dc, #5b86e5);
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background: linear-gradient(to right, #2cc4cf, #4a74d4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(54, 209, 220, 0.4);
+        }
+        .input-focus:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .tab-active {
+            border-bottom: 3px solid #667eea;
+            color: #667eea;
+        }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-pending {
+            background-color: #fef3c7;
+            color: #d97706;
+        }
+        .status-in_progress {
+            background-color: #dbeafe;
+            color: #1d4ed8;
+        }
+        .status-completed {
+            background-color: #d1fae5;
+            color: #059669;
+        }
+        .type-badge {
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        .type-work {
+            background-color: #e0e7ff;
+            color: #4f46e5;
+        }
+        .type-personal {
+            background-color: #fce7f3;
+            color: #db2777;
+        }
+        .type-goal {
+            background-color: #f0fdf4;
+            color: #16a34a;
+        }
+        .task-card {
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+        .task-card.completed {
+            opacity: 0.8;
+            border-left-color: #059669;
+        }
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+    </style>
 </head>
-<body class="min-h-screen bg-gray-50">
+<body class="bg-gray-50">
 
-<!-- Store user ID in meta tag for JavaScript access -->
-<meta name="user-id" th:content="${session.user.id}">
+<input type="hidden" id="authStatus" th:value="${session.user == null}">
+<input type="hidden" id="userId" th:value="${session.user != null ? session.user.id : ''}">
 
 <!-- navbar from fragments start -->
 <div th:replace="fragments/navbar :: header"></div>
 
-<!-- Loading Spinner -->
-<div id="loadingSpinner" class="loading-spinner">
-  <div class="spinner"></div>
+<!-- if user id not null then show dashboard -->
+<div th:if="${session.user != null}" class="container mx-auto px-4 py-8">
+
+    <!-- Header with Add Task Button -->
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">Task Dashboard</h1>
+            <p class="text-gray-600 mt-2">Manage your tasks efficiently</p>
+        </div>
+        <button onclick="showAddTaskForm()"
+                class="btn-primary text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2">
+            <i class="fas fa-plus"></i>
+            Add New Task
+        </button>
+    </div>
+
+    <!-- Add Task Modal (Hidden by default) -->
+    <div id="addTaskModal" class="fixed inset-0 z-50 hidden modal-overlay">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg mx-4 fade-in">
+                <div class="gradient-bg text-white p-6 rounded-t-xl flex justify-between items-center">
+                    <h2 class="text-xl font-bold">Create New Task</h2>
+                    <button onclick="hideAddTaskForm()" class="text-white hover:text-gray-200">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+
+                <form id="taskForm" class="p-6">
+                    <input type="hidden" id="taskId" value="">
+
+                    <div class="space-y-5">
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">Title *</label>
+                            <input type="text" id="title" required
+                                   class="w-full px-4 py-3 border rounded-lg input-focus focus:outline-none"
+                                   placeholder="Enter task title">
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">Description</label>
+                            <textarea id="description" rows="3"
+                                      class="w-full px-4 py-3 border rounded-lg input-focus focus:outline-none"
+                                      placeholder="Enter task description"></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Task Date</label>
+                                <input type="date" id="taskDate"
+                                       class="w-full px-4 py-3 border rounded-lg input-focus focus:outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Task Time</label>
+                                <input type="time" id="taskTime"
+                                       class="w-full px-4 py-3 border rounded-lg input-focus focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">Task Type *</label>
+                            <div class="grid grid-cols-3 gap-3">
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="radio" name="taskType" value="WORK" required class="hidden peer">
+                                    <div class="w-full py-3 text-center rounded-lg border peer-checked:border-blue-500 peer-checked:bg-blue-50">
+                                        <i class="fas fa-briefcase text-blue-500"></i>
+                                        <span class="ml-2">Work</span>
+                                    </div>
+                                </label>
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="radio" name="taskType" value="PERSONAL" class="hidden peer">
+                                    <div class="w-full py-3 text-center rounded-lg border peer-checked:border-pink-500 peer-checked:bg-pink-50">
+                                        <i class="fas fa-user text-pink-500"></i>
+                                        <span class="ml-2">Personal</span>
+                                    </div>
+                                </label>
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="radio" name="taskType" value="GOAL" class="hidden peer">
+                                    <div class="w-full py-3 text-center rounded-lg border peer-checked:border-green-500 peer-checked:bg-green-50">
+                                        <i class="fas fa-bullseye text-green-500"></i>
+                                        <span class="ml-2">Goal</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-4 mt-8 pt-6 border-t">
+                        <button type="button" onclick="hideAddTaskForm()"
+                                class="px-6 py-3 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 transition">
+                            Cancel
+                        </button>
+                        <button type="submit" id="submitBtn"
+                                class="btn-primary text-white px-6 py-3 rounded-lg font-medium">
+                            Create Task
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-xl shadow-sm card-hover">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-500 text-sm">Total Tasks</p>
+                    <h3 class="text-2xl font-bold mt-2" id="totalTasks">0</h3>
+                </div>
+                <div class="gradient-bg p-4 rounded-full">
+                    <i class="fas fa-tasks text-white text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm card-hover">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-500 text-sm">Pending</p>
+                    <h3 class="text-2xl font-bold mt-2 text-yellow-600" id="pendingTasks">0</h3>
+                </div>
+                <div class="bg-yellow-100 p-4 rounded-full">
+                    <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm card-hover">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-500 text-sm">Completed</p>
+                    <h3 class="text-2xl font-bold mt-2 text-green-600" id="completedTasks">0</h3>
+                </div>
+                <div class="bg-green-100 p-4 rounded-full">
+                    <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task List -->
+    <div id="taskExistDisplay" class="space-y-4">
+        <!-- Tasks will be dynamically inserted here -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="taskEmptyBlock" class="hidden">
+        <div class="text-center py-16">
+            <div class="mb-6">
+                <i class="fas fa-clipboard-list text-gray-300 text-6xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">No tasks yet</h3>
+            <p class="text-gray-500 mb-6">Start organizing your work by creating your first task</p>
+            <button onclick="showAddTaskForm()"
+                    class="btn-primary text-white px-6 py-3 rounded-lg font-semibold">
+                <i class="fas fa-plus mr-2"></i>Create Your First Task
+            </button>
+        </div>
+    </div>
+
 </div>
 
-<!-- Toast Notification -->
-<div id="toast" class="toast hidden">
-  <div class="flex items-center">
-    <i id="toastIcon" class="fas fa-check-circle mr-2"></i>
-    <span id="toastMessage">Operation successful!</span>
-  </div>
-</div>
-
-<!-- Main Content -->
-<div class="container mx-auto px-4 py-8">
-
-  <!-- Header Section -->
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-800">My Tasks</h1>
-    <p class="text-gray-600">Manage and organize all your tasks in one place</p>
-  </div>
-
-  <!-- Stats Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    <div class="bg-white rounded-xl shadow p-6 card-hover">
-      <div class="flex items-center">
-        <div class="p-3 rounded-full bg-blue-100 text-blue-600">
-          <i class="fas fa-tasks text-xl"></i>
-        </div>
-        <div class="ml-4">
-          <p class="text-gray-500">Total Tasks</p>
-          <p id="totalTasks" class="text-2xl font-bold">0</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="bg-white rounded-xl shadow p-6 card-hover">
-      <div class="flex items-center">
-        <div class="p-3 rounded-full bg-green-100 text-green-600">
-          <i class="fas fa-check-circle text-xl"></i>
-        </div>
-        <div class="ml-4">
-          <p class="text-gray-500">Completed</p>
-          <p id="completedTasks" class="text-2xl font-bold">0</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="bg-white rounded-xl shadow p-6 card-hover">
-      <div class="flex items-center">
-        <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
-          <i class="fas fa-clock text-xl"></i>
-        </div>
-        <div class="ml-4">
-          <p class="text-gray-500">Pending</p>
-          <p id="pendingTasks" class="text-2xl font-bold">0</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="bg-white rounded-xl shadow p-6 card-hover">
-      <div class="flex items-center">
-        <div class="p-3 rounded-full bg-red-100 text-red-600">
-          <i class="fas fa-exclamation-circle text-xl"></i>
-        </div>
-        <div class="ml-4">
-          <p class="text-gray-500">Overdue</p>
-          <p id="overdueTasks" class="text-2xl font-bold">0</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Action Bar -->
-  <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-    <div class="flex-1">
-      <h2 class="text-xl font-bold text-gray-800">Task List</h2>
-      <p class="text-gray-600">View and manage your tasks</p>
-    </div>
-
-    <div class="flex flex-wrap gap-3">
-      <!-- Filter Buttons -->
-      <div class="flex space-x-2">
-        <button onclick="filterTasks('ALL')"
-                class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 tab-active">
-          All Tasks
-        </button>
-        <button onclick="filterTasks('PENDING')"
-                class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50">
-          Pending
-        </button>
-        <button onclick="filterTasks('COMPLETED')"
-                class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50">
-          Completed
-        </button>
-      </div>
-
-      <!-- Create Task Button -->
-      <button onclick="openCreateModal()"
-              class="btn-primary text-white px-6 py-3 rounded-lg font-medium flex items-center">
-        <i class="fas fa-plus-circle mr-2"></i> Create Task
-      </button>
-    </div>
-  </div>
-
-  <!-- Filter Section -->
-  <div class="mb-6 p-4 bg-white rounded-lg shadow">
-    <div class="flex flex-wrap gap-4">
-      <div class="flex-1 min-w-[200px]">
-        <label class="block text-gray-700 mb-2">Status Filter</label>
-        <select id="statusFilter" onchange="applyFilters()"
-                class="w-full border rounded-lg px-4 py-2 input-focus">
-          <option value="ALL">All Status</option>
-          <option value="PENDING">Pending</option>
-          <option value="IN_PROGRESS">In Progress</option>
-          <option value="COMPLETED">Completed</option>
-        </select>
-      </div>
-
-      <div class="flex-1 min-w-[200px]">
-        <label class="block text-gray-700 mb-2">Type Filter</label>
-        <select id="typeFilter" onchange="applyFilters()"
-                class="w-full border rounded-lg px-4 py-2 input-focus">
-          <option value="ALL">All Types</option>
-          <option value="PERSONAL">Personal</option>
-          <option value="WORK">Work</option>
-          <option value="SHOPPING">Shopping</option>
-          <option value="OTHER">Other</option>
-        </select>
-      </div>
-
-      <div class="flex-1 min-w-[200px]">
-        <label class="block text-gray-700 mb-2">Date Filter</label>
-        <select id="dateFilter" onchange="applyFilters()"
-                class="w-full border rounded-lg px-4 py-2 input-focus">
-          <option value="ALL">All Dates</option>
-          <option value="TODAY">Today</option>
-          <option value="TOMORROW">Tomorrow</option>
-          <option value="THIS_WEEK">This Week</option>
-          <option value="NEXT_WEEK">Next Week</option>
-          <option value="OVERDUE">Overdue</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
-  <!-- Tasks Container -->
-  <div id="tasksContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <!-- Tasks will be loaded dynamically -->
-  </div>
-
-  <!-- Empty State -->
-  <div id="emptyState" class="text-center py-12 hidden">
-    <div class="text-gray-400 mb-4">
-      <i class="fas fa-clipboard-list text-6xl"></i>
-    </div>
-    <h3 class="text-xl font-semibold text-gray-600 mb-2">No tasks found</h3>
-    <p class="text-gray-500 mb-6">Create your first task to get started</p>
-    <button onclick="openCreateModal()"
-            class="btn-primary text-white px-6 py-3 rounded-lg font-medium inline-flex items-center">
-      <i class="fas fa-plus-circle mr-2"></i> Create Your First Task
-    </button>
-  </div>
-</div>
-
-<!-- Create/Edit Task Modal -->
-<div id="taskModal" class="modal-overlay">
-  <div class="modal-content">
-    <div class="p-6">
-      <div class="flex justify-between items-center mb-6">
-        <h3 class="text-xl font-bold text-gray-800" id="modalTitle">Create New Task</h3>
-        <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
-          <i class="fas fa-times text-xl"></i>
-        </button>
-      </div>
-
-      <form id="taskForm" onsubmit="handleTaskSubmit(event)">
-        <input type="hidden" id="taskId">
-
-        <div class="space-y-4">
-          <div>
-            <label class="block text-gray-700 mb-2">Title *</label>
-            <input type="text" id="title" required
-                   class="w-full border rounded-lg px-4 py-3 input-focus"
-                   placeholder="Enter task title">
-          </div>
-
-          <div>
-            <label class="block text-gray-700 mb-2">Description</label>
-            <textarea id="description" rows="3"
-                      class="w-full border rounded-lg px-4 py-3 input-focus"
-                      placeholder="Enter task description"></textarea>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-gray-700 mb-2">Task Date *</label>
-              <input type="date" id="taskDate" required
-                     class="w-full border rounded-lg px-4 py-3 input-focus">
-            </div>
-
-            <div>
-              <label class="block text-gray-700 mb-2">Task Time</label>
-              <input type="time" id="taskTime"
-                     class="w-full border rounded-lg px-4 py-3 input-focus">
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-gray-700 mb-2">Status</label>
-              <select id="status" class="w-full border rounded-lg px-4 py-3 input-focus">
-                <option value="PENDING">Pending</option>
-                <option value="IN_PROGRESS">In Progress</option>
-                <option value="COMPLETED">Completed</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block text-gray-700 mb-2">Task Type</label>
-              <select id="taskType" class="w-full border rounded-lg px-4 py-3 input-focus">
-                <option value="PERSONAL">Personal</option>
-                <option value="WORK">Work</option>
-                <option value="SHOPPING">Shopping</option>
-                <option value="OTHER">Other</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div class="flex justify-end space-x-3 mt-8">
-          <button type="button" onclick="closeModal()"
-                  class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50">
-            Cancel
-          </button>
-          <button type="submit"
-                  class="btn-primary text-white px-6 py-3 rounded-lg font-medium">
-            Save Task
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!-- JavaScript -->
 <script th:src="@{/js/dashboard-service.js}"></script>
-<script>
-  // Mobile menu toggle
-  document.getElementById('mobile-menu-button')?.addEventListener('click', function() {
-      const mobileMenu = document.getElementById('mobile-menu');
-      mobileMenu.classList.toggle('hidden');
-  });
-
-  // Set current year in footer
-  document.getElementById('current-year')?.textContent = new Date().getFullYear();
-
-  // Set today's date as default for new tasks
-  document.addEventListener('DOMContentLoaded', function() {
-      const today = new Date().toISOString().split('T')[0];
-      const taskDateInput = document.getElementById('taskDate');
-      if (taskDateInput && !taskDateInput.value) {
-          taskDateInput.value = today;
-      }
-  });
-</script>
 </body>
 </html>

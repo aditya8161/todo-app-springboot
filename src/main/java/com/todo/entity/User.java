@@ -36,6 +36,7 @@ public class User
     @Column(nullable = false)
     private boolean accountStatus;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER, cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Task> tasks =new ArrayList<>();
+
 }
