@@ -46,8 +46,8 @@ function calculateAndUpdateStats(tasks) {
 
     const total = tasks.length;
     const pending = tasks.filter(t => t.status === 'PENDING').length;
-    const completed = tasks.filter(t => t.status === 'COMPLETED').length;
-    
+    const completed = tasks.filter(t => t.status === 'COMPLETE').length;
+
     updateStats({total, pending, completed});
 }
 
@@ -106,6 +106,43 @@ async function completeTask(taskId) {
       }
   }
 
+// ========== MARK TASK AS PENDING USING PATCH API ==============
+async function markTaskAsPending(taskId) {
+    if (!confirm("Mark this task as pending?")) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${tasks_base_url}/pending?taskId=${taskId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (response.ok) {
+            showAlert("Task marked as pending!", "success");
+            getAllTasks(); // Refresh task list and stats
+        } else if (response.status === 404) {
+            showAlert("Task not found!", "error");
+        } else if (response.status === 400) {
+            showAlert("Invalid request. Task ID is required.", "error");
+        } else if (response.status === 500) {
+            showAlert("Server error. Please try again later.", "error");
+        } else {
+            throw new Error(`Failed to mark task as pending: ${response.status}`);
+        }
+    } catch (error) {
+        console.error("Error marking task as pending:", error);
+
+        if (error.name === 'TypeError' && error.message.includes('fetch')) {
+            showAlert("Network error. Please check your connection.", "error");
+        } else {
+            showAlert("Failed to mark task as pending. Please try again.", "error");
+        }
+    }
+}
+
 // ========== UPDATE TASK STATUS (UPDATED) ==============
 async function updateTaskStatus(taskId, newStatus) {
     try {
@@ -114,13 +151,19 @@ async function updateTaskStatus(taskId, newStatus) {
             await completeTask(taskId);
             return;
         }
-        
+
+        // If marking as PENDING, use the PATCH API
+        if (newStatus === 'PENDING') {
+            await markTaskAsPending(taskId);
+            return;
+        }
+
         // For other status updates, use the existing PUT logic
         const response = await fetch(`${tasks_base_url}/${taskId}`);
         if (!response.ok) throw new Error('Failed to fetch task');
-        
+
         const task = await response.json();
-        
+
         const updatedTask = {
             ...task,
             status: newStatus
@@ -150,10 +193,10 @@ async function updateTaskStatus(taskId, newStatus) {
 function displayTasksToUI(tasks) {
     let taskDisplayDiv = document.getElementById("taskExistDisplay");
     let taskEmptyDiv = document.getElementById("taskEmptyBlock");
-    
+
     taskDisplayDiv.innerHTML = "";
     taskEmptyDiv.classList.add("hidden");
-    
+
     if (!tasks || tasks.length === 0) {
         displayNoTaskUI();
         return;
@@ -170,7 +213,7 @@ function displayTasksToUI(tasks) {
         const taskCard = document.createElement('div');
         taskCard.className = `bg-white rounded-xl shadow-sm p-6 task-card ${task.status === 'COMPLETED' ? 'completed' : ''}`;
         taskCard.id = `task-${task.taskId}`;
-        
+
         // Format date and time if available
         let dateTimeHtml = '';
         if (task.taskDate) {
@@ -179,7 +222,7 @@ function displayTasksToUI(tasks) {
         if (task.taskTime) {
             dateTimeHtml += `<span class="flex items-center"><i class="far fa-clock mr-1"></i> ${task.taskTime}</span>`;
         }
-        
+
         taskCard.innerHTML = `
             <div class="flex justify-between items-start mb-4">
                 <div class="flex-1">
@@ -194,7 +237,7 @@ function displayTasksToUI(tasks) {
                     <p class="text-gray-600 mb-4 ${task.status === 'COMPLETED' ? 'line-through text-gray-400' : ''}">
                         ${task.description || "No description provided."}
                     </p>
-                    
+
                     <div class="flex flex-wrap gap-4 text-sm text-gray-500">
                         ${dateTimeHtml}
                         <span class="type-badge type-${task.taskType?.toLowerCase() || 'general'}">
@@ -204,23 +247,18 @@ function displayTasksToUI(tasks) {
                     </div>
                 </div>
             </div>
-            
+
             <div class="flex justify-between items-center pt-4 border-t">
                 <div class="flex gap-2">
                     ${task.status !== 'PENDING' ? `
-                    <button onclick="updateTaskStatus('${task.taskId}', 'PENDING')" 
+                    <button onclick="updateTaskStatus('${task.taskId}', 'PENDING')"
                             class="px-4 py-2 text-sm bg-yellow-50 text-yellow-700 rounded-lg hover:bg-yellow-100 transition">
                         <i class="fas fa-clock mr-1"></i>Mark as Pending
                     </button>
                     ` : ''}
-                    
-                    ${task.status !== 'IN_PROGRESS' ? `
-                    <button onclick="updateTaskStatus('${task.taskId}', 'IN_PROGRESS')"
-                            class="px-4 py-2 text-sm bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition">
-                        <i class="fas fa-spinner mr-1"></i>Mark as In Progress
-                    </button>
-                    ` : ''}
-                    
+
+
+
                     ${task.status !== 'COMPLETED' ? `
                     <button onclick="updateTaskStatus('${task.taskId}', 'COMPLETED')"
                             class="px-4 py-2 text-sm bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition">
@@ -228,7 +266,7 @@ function displayTasksToUI(tasks) {
                     </button>
                     ` : ''}
                 </div>
-                
+
                 <div class="flex gap-2">
                     <button onclick="editTask('${task.taskId}')"
                             class="px-4 py-2 text-sm bg-indigo-50 text-indigo-700 rounded-lg hover:bg-indigo-100 transition">
@@ -241,7 +279,7 @@ function displayTasksToUI(tasks) {
                 </div>
             </div>
         `;
-        
+
         taskDisplayDiv.appendChild(taskCard);
     });
 }
@@ -266,7 +304,7 @@ function formatDate(dateString) {
 function displayNoTaskUI() {
     let taskEmptyDiv = document.getElementById("taskEmptyBlock");
     let taskDisplayDiv = document.getElementById("taskExistDisplay");
-    
+
     taskEmptyDiv.classList.remove("hidden");
     taskDisplayDiv.innerHTML = "";
 }
@@ -304,8 +342,8 @@ async function createOrUpdateTask() {
 
     try {
         let response;
-        const url = taskId ? 
-            `${tasks_base_url}/${taskId}` : 
+        const url = taskId ?
+            `${tasks_base_url}/${taskId}` :
             `${tasks_base_url}/${userId}`;
 
         const method = taskId ? 'PATCH' : 'POST';
@@ -454,25 +492,25 @@ async function editTask(taskId) {
     try {
         const response = await fetch(`${tasks_base_url}/${taskId}`);
         if (!response.ok) throw new Error('Failed to fetch task');
-        
+
         const task = await response.json();
-        
+
         // Fill form with task data
         document.getElementById('taskId').value = task.taskId;
         document.getElementById('title').value = task.title || '';
         document.getElementById('description').value = task.description || '';
         document.getElementById('taskDate').value = task.taskDate || '';
         document.getElementById('taskTime').value = task.taskTime || '';
-        
+
         // Set task type radio button
         const taskTypeRadio = document.querySelector(`input[name="taskType"][value="${task.taskType}"]`);
         if (taskTypeRadio) {
             taskTypeRadio.checked = true;
         }
-        
+
         // Update button text
         document.getElementById('submitBtn').textContent = 'Update Task';
-        
+
         // Show modal
         showAddTaskForm();
     } catch (error) {

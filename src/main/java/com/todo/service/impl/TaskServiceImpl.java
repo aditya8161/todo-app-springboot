@@ -159,9 +159,22 @@ public class TaskServiceImpl implements TaskService
         return modelMapper.map(updatedTask, TaskDto.class);
     }
 
+    @Override
+    public TaskDto pendingStatusById(String taskId) {
+        TaskDto taskDto = getTaskById(taskId);
+
+        if(taskDto != null){
+            Task task = modelMapper.map(taskDto, Task.class);
+            task.setStatus(TaskStatus.PENDING);
+
+            Task save = taskRepo.save(task);
+
+            return modelMapper.map(save, TaskDto.class);
+        }
+        return null;
+    }
+
     //delete task by id
-
-
     @Transactional
     public boolean deleteTaskById(String taskId) {
         Task task = taskRepo.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task Not Found : "+taskId));

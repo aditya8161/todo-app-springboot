@@ -69,3 +69,4 @@ async function addUser(event) {
 document.getElementById('addUserForm').addEventListener('submit', addUser);
 
 //================ADD user code end =============
+

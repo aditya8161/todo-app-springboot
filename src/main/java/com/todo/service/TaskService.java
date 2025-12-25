@@ -33,6 +33,9 @@ public interface TaskService
     //complete task by id and delete task
     TaskDto completeTaskById(String taskId);
 
+    //mark as pending
+    TaskDto pendingStatusById(String taskId);
+
     //delete task
     boolean deleteTaskById(String taskId);
 

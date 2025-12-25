@@ -21,3 +21,14 @@ tasks_base_url = "http://localhost:8080/tasks";
     PATCH API : http://localhost:8080/tasks/{taskId}
     required : @PathVariable String taskId, @RequestBody TaskDto
 
+6)GET task by filter :
+    GET API : http://localhost:8080/tasks/filter
+    required : @RequestParam Long userId (needed)
+               @RequestParam(required = false) TaskType taskType
+               @RequestParam(required = false) LocalDate date
+               @RequestParam(required = false) TaskStatus status
+
+7)Mark complete status as PENDING
+    PATCH API : http://localhost:8080/tasks/pending
+    required : @RequestParam String taskId
+

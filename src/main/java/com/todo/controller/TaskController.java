@@ -118,6 +118,16 @@ public class TaskController
         return ResponseEntity.badRequest().build();
     }
 
+    @PatchMapping("/pending")
+    public ResponseEntity<TaskDto> pendingMarkTaskById(@RequestParam String taskId){
+        TaskDto taskDto = taskService.pendingStatusById(taskId);
+        if(taskDto.getStatus().equals(TaskStatus.PENDING)){
+            return ResponseEntity.ok(taskDto);
+        }
+
+        return ResponseEntity.badRequest().build();
+    }
+
     //delete task by taskId
     @DeleteMapping("/{taskId}")
     public ResponseEntity<?> deleteTaskById(@PathVariable String taskId){
