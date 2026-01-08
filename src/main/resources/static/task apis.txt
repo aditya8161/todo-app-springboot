@@ -32,3 +32,7 @@ tasks_base_url = "http://localhost:8080/tasks";
     PATCH API : http://localhost:8080/tasks/pending
     required : @RequestParam String taskId
 
+8) change user password :
+    PATCH API : http://localhost:8080/users/change-password
+        required : @RequestBody ChangePasswordRequest
+

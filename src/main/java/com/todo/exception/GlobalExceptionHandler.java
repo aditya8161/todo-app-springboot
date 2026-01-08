@@ -15,6 +15,21 @@ public class GlobalExceptionHandler
 {
 
 
+    @ExceptionHandler(IllegalAccessException.class)
+    public ResponseEntity<ErrorData> handleIllegalAccessException(IllegalAccessException ex, WebRequest request){
+        String path = request.getDescription(false).replace("uri=",""); //request path
+
+        ErrorData error = new ErrorData();
+        error.setMessage(ex.getMessage());
+        error.setErrorPath(path);
+        error.setErrorTime(LocalDateTime.now());
+        error.setStatus(HttpStatus.BAD_REQUEST);
+
+        log.error("Exception {}",error);
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorData> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request){
 
@@ -39,10 +54,10 @@ public class GlobalExceptionHandler
         error.setMessage(ex.getMessage());
         error.setErrorPath(path);
         error.setErrorTime(LocalDateTime.now());
-        error.setStatus(HttpStatus.NOT_FOUND);
+        error.setStatus(HttpStatus.BAD_REQUEST);
 
         log.error("Exception {}",error);
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(LoginFailedException.class)
@@ -53,7 +68,7 @@ public class GlobalExceptionHandler
         error.setMessage(ex.getMessage());
         error.setErrorPath(path);
         error.setErrorTime(LocalDateTime.now());
-        error.setStatus(HttpStatus.NOT_FOUND);
+        error.setStatus(HttpStatus.UNAUTHORIZED);
 
         log.error("Exception {}",error);
 

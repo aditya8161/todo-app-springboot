@@ -82,6 +82,7 @@ public class TaskServiceImpl implements TaskService
 
         List<Task> list = taskRepo.findTasksByUserIdAndTaskType(userId, taskType);
 
+
         return list.stream()
                 .map(task -> modelMapper.map(task, TaskDto.class))
                 .toList();

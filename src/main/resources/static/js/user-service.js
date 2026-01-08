@@ -1,3 +1,4 @@
+
 //adduser
 
 let page_base_url = "http://localhost:8080";
@@ -69,4 +70,106 @@ async function addUser(event) {
 document.getElementById('addUserForm').addEventListener('submit', addUser);
 
 //================ADD user code end =============
+
+
+//const authStatus = document.getElementById('authStatus').value;
+//const userId = document.getElementById("userId").value;
+//
+//if (authStatus === "true") {
+//    window.location.href = "http://localhost:8080/loginpage";
+//}else{
+//
+//}
+
+//==========update user====================
+async function updateUser(){
+    const userId = document.getElementById("userId").value;
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+
+    console.log(name+", "+phone);
+    console.log("User Id at update time : "+userId);
+    if (!name || !phone) {
+            alert("Name and Phone are required");
+            return;
+    }
+
+    const userData = {
+        name: name,
+        phone: phone
+    };
+
+     await fetch(`${user_base_url}/${userId}`, {
+         method: "PATCH",
+         headers: {
+             "Content-Type": "application/json"
+         },
+         body: JSON.stringify(userData)
+     })
+     .then(response => {
+         if (!response.ok) {
+             throw new Error("Update failed");
+         }
+        return response.json();
+     })
+     .then(data => {
+         console.log("User updated:", data);
+         alert("User updated successfully ✅");
+         window.location.reload();
+     })
+     .catch(error => {
+         console.error(error);
+         alert("Error while updating user ❌");
+     });
+    
+}
+//==============UPDATE the user by id ====================
+//document.getElementById("updateUserBtn").addEventListener("click", function (event) {
+//
+//    event.preventDefault(); // STOP form submit
+//
+//    const name = document.getElementById("name").value;
+//    const phone = document.getElementById("phone").value;
+//
+//    if (!name || !phone) {
+//        alert("Name and Phone are required");
+//        return;
+//    }
+//
+//    const userData = {
+//        name: name,
+//        phone: phone
+//    };
+//
+//    fetch(`${user_base_url}/${userId}`, {
+//        method: "PATCH",
+//        headers: {
+//            "Content-Type": "application/json"
+//        },
+//        body: JSON.stringify(userData)
+//    })
+//    .then(response => {
+//        if (!response.ok) {
+//            throw new Error("Update failed");
+//        }
+//        return response.json();
+//    })
+//    .then(data => {
+//        console.log("User updated:", data);
+//        alert("User updated successfully ✅");
+//        window.location.reload();
+//    })
+//    .catch(error => {
+//        console.error(error);
+//        alert("Error while updating user ❌");
+//    });
+//});
+
+
+
+
+
+
+
+
 

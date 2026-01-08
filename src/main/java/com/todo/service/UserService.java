@@ -1,5 +1,6 @@
 package com.todo.service;
 
+import com.todo.dto.ChangePasswordRequest;
 import com.todo.dto.LoginRequest;
 import com.todo.dto.TaskDto;
 import com.todo.dto.UserDto;
@@ -33,4 +34,7 @@ public interface UserService
 
     //get all users
     List<UserDto> getAllUsers();
+
+    //change password
+    UserDto changePassword(ChangePasswordRequest request);
 }

@@ -83,5 +83,13 @@ public class PageController
         return "redirect:/loginpage";
     }
 
+    //---------------------------
+    //user thymeleaf form
+    @GetMapping("/change-password")
+    public String openChangePasswordPage(){
+
+        return "change-password";
+    }
+
 
 }

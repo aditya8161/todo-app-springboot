@@ -1,9 +1,11 @@
 package com.todo.controller;
 
+import com.todo.dto.ChangePasswordRequest;
 import com.todo.dto.LoginRequest;
 import com.todo.dto.TaskDto;
 import com.todo.dto.UserDto;
 import com.todo.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,12 +58,17 @@ public class UserController
 
     //update user by id
     @PatchMapping("/{userId}")
-    public ResponseEntity<UserDto> updateUserById(@PathVariable Long userId, @RequestBody UserDto userDto){
+    public ResponseEntity<UserDto> updateUserById(@PathVariable Long userId, @RequestBody UserDto userDto, HttpSession session){
         UserDto userDto1 = userService.updateUserById(userId, userDto);
 
         if(userDto1 != null){
+            Object user = session.getAttribute("user");
+            if(user != null){
+               session.setAttribute("user",userDto1);
+            }
             return new ResponseEntity<>(userDto1, HttpStatus.OK);
         }
+
 
         return ResponseEntity.badRequest().build();
     }
@@ -99,6 +106,14 @@ public class UserController
             return new ResponseEntity<>(usersList,HttpStatus.OK);
         }
         return ResponseEntity.noContent().build();
+    }
+
+    //change password of user
+    @PatchMapping("/change-password")
+    public ResponseEntity<UserDto> changeUserPassword(@RequestBody ChangePasswordRequest request){
+        UserDto userDto = userService.changePassword(request);
+
+        return ResponseEntity.ok(userDto);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.todo.service.impl;
 
+import com.todo.dto.ChangePasswordRequest;
 import com.todo.dto.LoginRequest;
 import com.todo.dto.TaskDto;
 import com.todo.dto.UserDto;
@@ -38,7 +39,6 @@ public class UserServiceImpl implements UserService
         if(!existUser.isEmpty()) throw new IllegalArgumentException("User already exists...!");
 
         User user = modelMapper.map(userDto, User.class);
-        user.setAccountOpenDate(LocalDate.now());
         user.setAccountStatus(true);
         User savedUser = userRepo.save(user);
         return modelMapper.map(savedUser, UserDto.class);
@@ -135,5 +135,24 @@ public class UserServiceImpl implements UserService
         return allUsers.stream()
                 .map(user -> modelMapper.map(user, UserDto.class))
                 .toList();
+    }
+
+    //change password
+    public UserDto changePassword(ChangePasswordRequest request) {
+        User user = userRepo.findById(request.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User Not Found : " + request.getUserId()));
+
+        if(!user.getPassword().equals(request.getCurrentPassword())){
+            throw new IllegalArgumentException("Current Password is wrong..!");
+        }
+
+        if(request.getNewPassword() == null || request.getNewPassword().isBlank()){
+            throw new IllegalArgumentException("New Password cannot be null or blank");
+        }
+
+        user.setPassword(request.getNewPassword());
+        User updatedUser = userRepo.save(user);
+
+        return modelMapper.map(updatedUser, UserDto.class);
     }
 }
